@@ -1,28 +1,71 @@
 package com.newton.demo.api.controller;
 
 import com.newton.demo.domain.model.Client;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.newton.demo.domain.repository.ClientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "/clients")
 public class ClientController {
-    @GetMapping("/clients")
+    /*@PersistenceContext
+    private EntityManager entityManager;*/
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @GetMapping
     public List<Client> list() {
-        Client client1 = new Client();
-        client1.setId(1L);
-        client1.setName("Jaum");
-        client1.setPhone("HAUHSUAH");
-        client1.setEmail("ahushauhsa");
+        //return entityManager.createQuery("from Client", Client.class).getResultList();
+        return clientRepository.findAll();
+    }
 
-        Client client2 = new Client();
-        client2.setId(2L);
-        client2.setName("Jaum2");
-        client2.setPhone("HAUHSUAH2");
-        client2.setEmail("ahushauhsa2");
+    @GetMapping("/{id}")
+    public ResponseEntity<Client> find(@PathVariable Long id) {
+        Optional<Client> client = clientRepository.findById(id);
 
-        return Arrays.asList(client1, client2);
+        if (client.isPresent()) {
+            return ResponseEntity.ok(client.get());
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Client create(@Valid @RequestBody Client client) {
+        return clientRepository.save(client);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Client> update(@Valid @PathVariable Long id, @RequestBody Client client) {
+        if (!clientRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        //Seta o id do client no objeto para que ao salvar a entidade seja atualizada ao inves de criar uma nova
+        client.setId(id);
+        client = clientRepository.save(client);
+
+        return ResponseEntity.ok(client);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (!clientRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        clientRepository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
