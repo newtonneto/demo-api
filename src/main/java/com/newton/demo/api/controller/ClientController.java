@@ -2,6 +2,7 @@ package com.newton.demo.api.controller;
 
 import com.newton.demo.domain.model.Client;
 import com.newton.demo.domain.repository.ClientRepository;
+import com.newton.demo.domain.service.ClientCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ public class ClientController {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private ClientCatalogService clientCatalogService;
 
     @GetMapping
     public List<Client> list() {
@@ -42,7 +46,7 @@ public class ClientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Client create(@Valid @RequestBody Client client) {
-        return clientRepository.save(client);
+        return clientCatalogService.save(client);
     }
 
     @PutMapping("/{id}")
@@ -53,7 +57,7 @@ public class ClientController {
 
         //Seta o id do client no objeto para que ao salvar a entidade seja atualizada ao inves de criar uma nova
         client.setId(id);
-        client = clientRepository.save(client);
+        client = clientCatalogService.save(client);
 
         return ResponseEntity.ok(client);
     }
@@ -64,7 +68,7 @@ public class ClientController {
             return ResponseEntity.notFound().build();
         }
 
-        clientRepository.deleteById(id);
+        clientCatalogService.delete(id);
 
         return ResponseEntity.noContent().build();
     }
