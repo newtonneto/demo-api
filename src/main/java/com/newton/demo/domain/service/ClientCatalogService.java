@@ -28,4 +28,9 @@ public class ClientCatalogService {
     public void delete(Long id) {
         clientRepository.deleteById(id);
     }
+
+    public Client search(Long id) {
+        return clientRepository.findById(id)
+                .orElseThrow(() -> new RulesException("Cliente não encontrado"));
+    }
 }
