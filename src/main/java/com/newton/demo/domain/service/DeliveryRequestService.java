@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 public class DeliveryRequestService {
@@ -25,7 +25,7 @@ public class DeliveryRequestService {
 
         delivery.setClient(client);
         delivery.setStatus(DeliveryStatus.PENDING);
-        delivery.setOrderDate(LocalDateTime.now());
+        delivery.setOrderDate(OffsetDateTime.now());
 
         return deliveryRepository.save(delivery);
     }
