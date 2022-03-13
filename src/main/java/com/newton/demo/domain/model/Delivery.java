@@ -3,6 +3,7 @@ package com.newton.demo.domain.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.newton.demo.domain.ValidationGroups;
+import com.newton.demo.domain.exception.RulesException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,4 +59,15 @@ public class Delivery {
 
         return event;
     }
+
+    public void conclude() {
+        if (!DeliveryStatus.PENDING.equals(getStatus())) {
+            throw new RulesException("Entrega não pode ser finalizada");
+        }
+
+        setStatus(DeliveryStatus.FINISHED);
+        setDeliveryDate(OffsetDateTime.now());
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.newton.demo.api.dto.ReceiverDTO;
 import com.newton.demo.api.dto.input.DeliveryInputDTO;
 import com.newton.demo.domain.model.Delivery;
 import com.newton.demo.domain.repository.DeliveryRepository;
+import com.newton.demo.domain.service.ConcludeDeliveryService;
 import com.newton.demo.domain.service.DeliveryRequestService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class DeliveryController {
     private DeliveryRepository deliveryRepository;
     @Autowired
     private DeliveryMapper deliveryMapper;
+    @Autowired
+    private ConcludeDeliveryService concludeDeliveryService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -69,5 +72,11 @@ public class DeliveryController {
                     return ResponseEntity.ok(deliveryDto);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/conclude")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void conclude(@PathVariable Long id) {
+        concludeDeliveryService.conclude(id);
     }
 }
