@@ -14,6 +14,8 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
@@ -37,10 +39,23 @@ public class Delivery {
 
     private BigDecimal fare;
 
+    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
+    private List<Event> events = new ArrayList<>();
+
     //EnumType.STRING salva o texto do enum ao inves do seu valor numerico
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
     private OffsetDateTime orderDate;
     private OffsetDateTime deliveryDate;
+
+    public Event addEvent(String description) {
+        Event event = new Event();
+        event.setDescription(description);
+        event.setRegisterDate(OffsetDateTime.now());
+        event.setDelivery(this);
+        this.getEvents().add(event);
+
+        return event;
+    }
 }

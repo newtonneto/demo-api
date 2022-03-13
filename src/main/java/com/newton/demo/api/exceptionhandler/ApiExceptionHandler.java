@@ -1,5 +1,6 @@
 package com.newton.demo.api.exceptionhandler;
 
+import com.newton.demo.domain.exception.EntityNotFoundException;
 import com.newton.demo.domain.exception.RulesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -48,6 +49,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RulesException.class)
     public ResponseEntity<Object> handleRulesException(RulesException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        Problem problem = new Problem();
+        problem.setStatus(status.value());
+        problem.setDateTime(OffsetDateTime.now());
+        problem.setTitle(ex.getMessage());
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(RulesException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         Problem problem = new Problem();
         problem.setStatus(status.value());
