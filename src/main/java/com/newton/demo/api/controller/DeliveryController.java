@@ -3,6 +3,7 @@ package com.newton.demo.api.controller;
 import com.newton.demo.api.assembler.DeliveryMapper;
 import com.newton.demo.api.dto.DeliveryDTO;
 import com.newton.demo.api.dto.ReceiverDTO;
+import com.newton.demo.api.dto.input.DeliveryInputDTO;
 import com.newton.demo.domain.model.Delivery;
 import com.newton.demo.domain.repository.DeliveryRepository;
 import com.newton.demo.domain.service.DeliveryRequestService;
@@ -27,8 +28,9 @@ public class DeliveryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DeliveryDTO request(@Valid @RequestBody Delivery delivery) {
-        Delivery deliveryRequested = deliveryRequestService.request(delivery);
+    public DeliveryDTO request(@Valid @RequestBody DeliveryInputDTO delivery) {
+        Delivery deliveryEntity = deliveryMapper.toEntity(delivery);
+        Delivery deliveryRequested = deliveryRequestService.request(deliveryEntity);
 
         return deliveryMapper.toDto(deliveryRequested);
     }

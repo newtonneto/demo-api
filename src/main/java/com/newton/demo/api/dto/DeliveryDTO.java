@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Setter
 public class DeliveryDTO {
     private Long id;
-    private String clientName;
+    private ResumeClientDTO client;
     private ReceiverDTO receiver;
     private BigDecimal fare;
     private DeliveryStatus status;

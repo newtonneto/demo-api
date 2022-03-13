@@ -1,6 +1,7 @@
 package com.newton.demo.api.assembler;
 
 import com.newton.demo.api.dto.DeliveryDTO;
+import com.newton.demo.api.dto.input.DeliveryInputDTO;
 import com.newton.demo.domain.model.Delivery;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,9 @@ public class DeliveryMapper {
 
     public List<DeliveryDTO> toCollectionDto(List<Delivery> deliveries) {
         return deliveries.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public Delivery toEntity(DeliveryInputDTO delivery) {
+        return modelMapper.map(delivery, Delivery.class);
     }
 }

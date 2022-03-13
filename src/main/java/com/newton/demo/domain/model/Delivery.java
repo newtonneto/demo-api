@@ -25,30 +25,22 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Valid
-    @ConvertGroup(from = Default.class, to = ValidationGroups.ClientId.class)
-    @NotNull
+
+
     @ManyToOne
     private Client client;
 
     //receiver não vai ser uma tabela a parte no banco, a annotation Embedded separa em classes diferentes
     //elementos de uma mesma tabela
     @Embedded
-    @Valid
-    @NotNull
     private Receiver receiver;
 
-    @NotNull
     private BigDecimal fare;
 
     //EnumType.STRING salva o texto do enum ao inves do seu valor numerico
     @Enumerated(EnumType.STRING)
-    @JsonProperty(access = Access.READ_ONLY)
     private DeliveryStatus status;
 
-    @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime orderDate;
-
-    @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime deliveryDate;
 }
